@@ -1,0 +1,23 @@
+#books-nav {
+    display: flex;
+    width: 50%;
+    margin: auto;
+    justify-content: space-between;
+    padding-top: 1rem;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex-grow: 1;
+}
+
+footer {
+    background-color: #f8f9fa; /* Optional: Just for visual separation */
+    padding: 10px;
+    text-align: center;
+}
