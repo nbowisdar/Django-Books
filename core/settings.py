@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-hyqxa2s7d-ai80w8qxi34&rju1))o+kz0=^deem)byui09w-&1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['example.com', 'www.example.com', 'api.example.com', 'sub.example.com']
 
 
 # Application definition
@@ -133,8 +133,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    "PAGE_SIZE": 2,
+    "PAGE_SIZE": 10,
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
 }
 
 SPECTACULAR_SETTINGS = {

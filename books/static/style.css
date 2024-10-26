@@ -14,6 +14,8 @@ body {
 
 main {
     flex-grow: 1;
+    text-align: center;
+    /* justify-content: center; */
 }
 
 footer {
@@ -21,3 +23,5 @@ footer {
     padding: 10px;
     text-align: center;
 }
+
+    

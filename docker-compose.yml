@@ -1,34 +1,34 @@
-version: '3'
+volumes:
+  dj_template_local_postgres_data: {}
+  dj_template_local_postgres_data_backups: {}
+  
 
 services:
-  web_app_db:
-    restart: always
-    container_name: web-app-db
-    image: postgres:11
-    environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_NAME=${POSTGRES_NAME}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    ports:
-      - "${POSTGRES_LOCAL_PORT}:${POSTGRES_PORT}"
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_NAME}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-
-  django_backend:
-    container_name: django-backend
+  django:
     build:
       context: .
-      dockerfile: DockerFile
-    entrypoint: /entrypoint.sh
-    command: bash -c "python manage.py runserver 0.0.0.0:${DJANGO_PORT}"
-    ports:
-      - "${DJANGO_PORT}:${DJANGO_PORT}"
-    volumes:
-      - .:/django_project
+      dockerfile: ./compose/local/django/Dockerfile
+    image: dj_template_local_django
+    container_name: dj_template_local_django
     depends_on:
-      web_app_db:
-        condition: service_healthy
-    restart: on-failure
+      - postgres
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - '8000:8000'
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: dj_template_production_postgres
+    container_name: dj_template_local_postgres
+    volumes:
+      - dj_template_local_postgres_data:/var/lib/postgresql/data
+      - dj_template_local_postgres_data_backups:/backups
+    env_file:
+      - ./.envs/.local/.postgres
