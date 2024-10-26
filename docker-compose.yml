@@ -1,34 +1,46 @@
-volumes:
-  dj_template_local_postgres_data: {}
-  dj_template_local_postgres_data_backups: {}
-  
+version: '3.8'  # Specify the version of Docker Compose
+
+# Define reusable configurations
+x-common-environment: &common-environment
+  POSTGRES_NAME: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
 
 services:
-  django:
-    build:
-      context: .
-      dockerfile: ./compose/local/django/Dockerfile
-    image: dj_template_local_django
-    container_name: dj_template_local_django
-    depends_on:
-      - postgres
+  db:
+    image: postgres
+    container_name: db
     volumes:
-      - .:/app:z
-    env_file:
-      - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
-    ports:
-      - '8000:8000'
-    command: /start
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      <<: *common-environment
 
-  postgres:
-    build:
-      context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
-    image: dj_template_production_postgres
-    container_name: dj_template_local_postgres
+  prestart:
+    container_name: prestart
+    build: .
+    depends_on:
+      - db
+    environment:
+      <<: *common-environment
+    command: bash scripts/prestart.sh
+
+  backend:
+    container_name: backend
+    build: .
+    command: uv run manage.py runserver 0.0.0.0:8000
     volumes:
-      - dj_template_local_postgres_data:/var/lib/postgresql/data
-      - dj_template_local_postgres_data_backups:/backups
-    env_file:
-      - ./.envs/.local/.postgres
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      <<: *common-environment
+    depends_on:
+      - db
+      - prestart
+
+    develop:
+      backend:
+        watch:  # This section indicates that this service should be watched
+          paths:
+            - ./  # Specify the path(s) to watch for changes
+

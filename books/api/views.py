@@ -1,4 +1,9 @@
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
+from rest_framework.mixins import (
+    CreateModelMixin,
+    ListModelMixin,
+    RetrieveModelMixin,
+    UpdateModelMixin,
+)
 from rest_framework.viewsets import GenericViewSet
 
 from books.filters import BookFilter
@@ -8,7 +13,11 @@ from .serializers import BookSerializer
 
 
 class BooksViewSet(
-    RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericViewSet
+    RetrieveModelMixin,
+    CreateModelMixin,
+    ListModelMixin,
+    UpdateModelMixin,
+    GenericViewSet,
 ):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
