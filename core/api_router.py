@@ -6,7 +6,7 @@ from books.api.views import BooksViewSet
 router = DefaultRouter() if settings.DEBUG else SimpleRouter()
 
 
-router.register(r"books", BooksViewSet)
+router.register(r"books", BooksViewSet, basename="book")
 
 
 app_name = "api"

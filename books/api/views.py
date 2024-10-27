@@ -1,5 +1,6 @@
 from rest_framework.mixins import (
     CreateModelMixin,
+    DestroyModelMixin,
     ListModelMixin,
     RetrieveModelMixin,
     UpdateModelMixin,
@@ -18,6 +19,7 @@ class BooksViewSet(
     ListModelMixin,
     UpdateModelMixin,
     GenericViewSet,
+    DestroyModelMixin,
 ):
     queryset = Book.objects.all()
     serializer_class = BookSerializer

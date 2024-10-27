@@ -90,8 +90,8 @@ else:
             "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-
-
+DB_NAME_TEST = os.environ.get("DB_NAME_TEST")
+DATABASES["test"] = {"NAME": f"test_{os.environ.get('DB_NAME_TEST')}"}
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
