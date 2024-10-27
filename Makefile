@@ -16,19 +16,10 @@ help:
 	@echo "  make makemigrations - Create new migrations based on changes"
 	@echo "  make shell          - Open the Django shell"
 	@echo "  make test           - Run tests"
-	@echo "  make collectstatic  - Collect static files"
+	@echo "  make test-postgres  - Run tests in a Docker container with PostgreSQL"
 
 run-dev:
 	$(DJANGO_MANAGE) runserver
-
-run-watch:
-	docker compose watch
-
-run-prod:
-	docker compose up --build -d
-
-stop:
-	docker compose stop
 
 migrate:
 	$(DJANGO_MANAGE) migrate
@@ -42,9 +33,14 @@ shell:
 test:
 	$(DJANGO_MANAGE) test
 
+run-watch:
+	docker compose watch
+
+run-prod:
+	docker compose up --build -d
+
+stop:
+	docker compose stop
+
 test-postgres:
 	docker compose up backend-test
-
-collectstatic:
-	$(DJANGO_MANAGE) collectstatic
-
